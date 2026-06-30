@@ -53,6 +53,12 @@ pipeline {
                         echo "ERROR: Neither kubectl nor minikube found"
                         exit 1
                     fi
+
+                    # Ensure minikube is running
+                    if command -v minikube &> /dev/null; then
+                        minikube status &> /dev/null || minikube start --driver=docker
+                    fi
+
                     \$KUBECTL apply --validate=false -f k8s-deployment.yaml
                     \$KUBECTL rollout restart deployment/devops-cie2-q4
                 """
